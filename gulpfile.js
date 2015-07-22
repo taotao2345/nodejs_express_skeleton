@@ -5,8 +5,16 @@ var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 
-gulp.task('lint2', function() {
-  return gulp.src(['./routes/**/*.js'])
+var jsFilePaths = [
+  './routes/**/*.js',
+  './lib/**/*.js'
+];
+var testFilePaths = [
+  './test/**/*.js'
+];
+
+gulp.task('lint', function() {
+  return gulp.src(jsFilePaths)
     .pipe(eslint('.eslintrc'))
     //.pipe(eslint.format('checkstyle', process.stderr))
     .pipe(eslint.format())
@@ -14,7 +22,7 @@ gulp.task('lint2', function() {
 });
 
 gulp.task('test', function() {
-  return gulp.src('test/**/*.js', {
+  return gulp.src(testFilePaths, {
       read: false
     })
     .pipe(mocha({
@@ -24,11 +32,11 @@ gulp.task('test', function() {
 });
 
 gulp.task('cover', function(cb) {
-  gulp.src(['routes/**/*.js', 'lib/**/*.js'])
+  gulp.src(jsFilePaths)
     .pipe(istanbul()) // Covering files
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function() {
-      gulp.src(['test/**/*.js'])
+      gulp.src(testFilePaths)
         .pipe(mocha({
           require: ['should']
         }))
@@ -51,5 +59,8 @@ gulp.task('watch', function() {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
   });
 });
+
+gulp.task('commit', ['lint', 'test'], function() {});
+gulp.task('component', ['lint', 'test', 'cover'], function() {});
 
 gulp.task('default', ['lint', 'test'], function() {});
