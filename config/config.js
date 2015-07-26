@@ -6,25 +6,25 @@ var config = {
   development: {
     root: rootPath,
     app: {
-      name: 'hoge'
+      env: 'development'
     },
-    port: 3000,
+    port: 3000
   },
 
   test: {
     root: rootPath,
     app: {
-      name: 'hoge'
+      env: 'test'
     },
-    port: 3000,
+    port: 3000
   },
 
   production: {
     root: rootPath,
     app: {
-      name: 'hoge'
+      env: 'production'
     },
-    port: 3000,
+    port: 3000
   }
 };
 

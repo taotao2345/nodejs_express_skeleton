@@ -16,7 +16,6 @@ var testFilePaths = [
 gulp.task('lint', function() {
   return gulp.src(jsFilePaths)
     .pipe(eslint('.eslintrc'))
-    //.pipe(eslint.format('checkstyle', process.stderr))
     .pipe(eslint.format())
     .pipe(eslint.failOnError());
 });
@@ -25,10 +24,7 @@ gulp.task('test', function() {
   return gulp.src(testFilePaths, {
       read: false
     })
-    .pipe(mocha({
-      require: ['should'],
-      reporter: 'xunit-file'
-    }));
+    .pipe(mocha());
 });
 
 gulp.task('cover', function(cb) {
@@ -38,7 +34,7 @@ gulp.task('cover', function(cb) {
     .on('finish', function() {
       gulp.src(testFilePaths)
         .pipe(mocha({
-          require: ['should']
+          require: ['power-assert']
         }))
         .pipe(istanbul.writeReports({
           dir: 'test-assets/coverage',
@@ -46,7 +42,7 @@ gulp.task('cover', function(cb) {
         }))
         .pipe(istanbul.enforceThresholds({
           thresholds: {
-            global: 90
+            //global: 80
           }
         })) // Enforce a coverage of at least 90%
         .on('end', cb);
@@ -59,8 +55,5 @@ gulp.task('watch', function() {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
   });
 });
-
-gulp.task('commit', ['lint', 'test'], function() {});
-gulp.task('component', ['lint', 'test', 'cover'], function() {});
 
 gulp.task('default', ['lint', 'test'], function() {});

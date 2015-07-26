@@ -3,9 +3,16 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res) {
+var config = require('../config/config');
+var example = require('../lib/example');
+
+router.get('/', function(req, res, next) {
+  var x = example.hoge('hoge');
+  var y = example.hoge('foo');
   res.send({
-    hoge: 'test'
+    config: config,
+    hoge: x,
+    foo: y
   });
 });
 
